@@ -6,54 +6,23 @@ from views import LanguageDropdownView
 from flask import Flask
 import threading
 
-# Set up Flask app
 app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return "Welcome to DevsCertified"
+    return "Welcome to DevsCertificated"
 
-# Get the bot token from environment variables
 DISCORD_TOKEN = os.getenv('token')
 
-# Create a bot instance with command prefix and intents
 intents = discord.Intents.default()
 intents.message_content = True
-bot = commands.Bot(command_prefix="!", intents=intents)
 
-# Your Discord user ID (for restricting command access)
-OWNER_ID = 936320442594103307
+bot = commands.Bot(command_prefix="!", intents=intents)
 
 @bot.event
 async def on_ready():
     print(f'Bot is online as {bot.user}!')
     await bot.tree.sync()
-
-@bot.command(name='list')
-async def list_guilds(ctx):
-    if ctx.author.id != OWNER_ID:
-        return await ctx.send("You do not have permission to use this command.")
-    
-    guilds = bot.guilds
-    if guilds:
-        response = 'I am in the following servers:\n'
-        for guild in guilds:
-            response += f'{guild.name} (ID: {guild.id})\n'
-        await ctx.send(response)
-    else:
-        await ctx.send('I am not in any servers.')
-
-@bot.command(name='leave')
-async def leave_guild(ctx, guild_id: int):
-    if ctx.author.id != OWNER_ID:
-        return await ctx.send("You do not have permission to use this command.")
-    
-    guild = bot.get_guild(guild_id)
-    if guild:
-        await guild.leave()
-        await ctx.send(f'Left the server: {guild.name}')
-    else:
-        await ctx.send('I am not in that server or invalid ID.')
 
 @bot.tree.command(name="certificated", description="Get certified in a programming language")
 async def slash_command(interaction: discord.Interaction):
@@ -69,4 +38,5 @@ if __name__ == '__main__':
     flask_thread = threading.Thread(target=app.run, kwargs={'host': '0.0.0.0', 'port': 8000, 'debug': False})
     flask_thread.start()
     
-    # Run the Discord
+    # Run the Discord bot in the main thread
+    run_discord_bot()
