@@ -11,7 +11,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return "Welcome to DevsCertificated"
+    return "Welcome to DevsCertified"
 
 # Get the bot token from environment variables
 DISCORD_TOKEN = os.getenv('token')
