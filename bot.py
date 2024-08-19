@@ -23,7 +23,7 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 @bot.event
 async def on_ready():
     print(f'Bot is online as {bot.user}!')
-    await bot.tree.sync()
+    await bot.tree.sync()  # Sync commands with Discord
 
 @bot.tree.command(name="certificated", description="Get certified in a programming language")
 async def slash_command(interaction: discord.Interaction):
