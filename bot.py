@@ -4,6 +4,13 @@ from discord.ext import commands
 from discord import app_commands
 from views import LanguageDropdownView
 #from config import DISCORD_TOKEN
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "Welcome to DevsCertificated"
 
 DISCORD_TOKEN = os.getenv('token')
 
@@ -24,3 +31,6 @@ async def slash_command(interaction: discord.Interaction):
         view=LanguageDropdownView())
 
 bot.run(DISCORD_TOKEN)
+
+if __name__ == '__main__':
+    app.run(debug=False)
