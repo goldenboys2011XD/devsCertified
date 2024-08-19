@@ -35,7 +35,7 @@ def run_discord_bot():
 
 if __name__ == '__main__':
     # Start the Flask server in a separate thread
-    flask_thread = threading.Thread(target=app.run, kwargs={'debug': False})
+    flask_thread = threading.Thread(target=app.run, kwargs={'host': '0.0.0.0', 'port': 8000, 'debug': False})
     flask_thread.start()
     
     # Run the Discord bot in the main thread
