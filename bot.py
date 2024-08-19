@@ -27,39 +27,39 @@ OWNER_ID = 936320442594103307
 @bot.event
 async def on_ready():
     print(f'Bot is online as {bot.user}!')
-    await bot.tree.sync()  # Sync slash commands with Discord
+    await bot.tree.sync()
 
-@bot.tree.command(name="certificated", description="Get certified in a programming language")
-async def slash_certificated(interaction: discord.Interaction):
-    await interaction.response.send_message(
-        "Select a programming language to start the quiz:",
-        view=LanguageDropdownView())
-
-@bot.tree.command(name="list", description="List all servers the bot is in")
-async def slash_list(interaction: discord.Interaction):
-    if interaction.user.id != OWNER_ID:
-        return await interaction.response.send_message("You do not have permission to use this command.", ephemeral=True)
+@bot.command(name='list')
+async def list_guilds(ctx):
+    if ctx.author.id != OWNER_ID:
+        return await ctx.send("You do not have permission to use this command.")
     
     guilds = bot.guilds
     if guilds:
         response = 'I am in the following servers:\n'
         for guild in guilds:
             response += f'{guild.name} (ID: {guild.id})\n'
-        await interaction.response.send_message(response)
+        await ctx.send(response)
     else:
-        await interaction.response.send_message('I am not in any servers.')
+        await ctx.send('I am not in any servers.')
 
-@bot.tree.command(name="leave", description="Make the bot leave a server")
-async def slash_leave(interaction: discord.Interaction, guild_id: int):
-    if interaction.user.id != OWNER_ID:
-        return await interaction.response.send_message("You do not have permission to use this command.", ephemeral=True)
+@bot.command(name='leave')
+async def leave_guild(ctx, guild_id: int):
+    if ctx.author.id != OWNER_ID:
+        return await ctx.send("You do not have permission to use this command.")
     
     guild = bot.get_guild(guild_id)
     if guild:
         await guild.leave()
-        await interaction.response.send_message(f'Left the server: {guild.name}')
+        await ctx.send(f'Left the server: {guild.name}')
     else:
-        await interaction.response.send_message('I am not in that server or invalid ID.')
+        await ctx.send('I am not in that server or invalid ID.')
+
+@bot.tree.command(name="certificated", description="Get certified in a programming language")
+async def slash_command(interaction: discord.Interaction):
+    await interaction.response.send_message(
+        "Select a programming language to start the quiz:",
+        view=LanguageDropdownView())
 
 def run_discord_bot():
     bot.run(DISCORD_TOKEN)
@@ -69,5 +69,4 @@ if __name__ == '__main__':
     flask_thread = threading.Thread(target=app.run, kwargs={'host': '0.0.0.0', 'port': 8000, 'debug': False})
     flask_thread.start()
     
-    # Run the Discord bot in the main thread
-    run_discord_bot()
+    # Run the Discord
