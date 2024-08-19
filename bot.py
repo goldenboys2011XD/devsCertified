@@ -3,8 +3,8 @@ import discord
 from discord.ext import commands
 from discord import app_commands
 from views import LanguageDropdownView
-#from config import DISCORD_TOKEN
 from flask import Flask
+import threading
 
 app = Flask(__name__)
 
@@ -30,7 +30,13 @@ async def slash_command(interaction: discord.Interaction):
         "Select a programming language to start the quiz:",
         view=LanguageDropdownView())
 
-bot.run(DISCORD_TOKEN)
+def run_discord_bot():
+    bot.run(DISCORD_TOKEN)
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    # Start the Flask server in a separate thread
+    flask_thread = threading.Thread(target=app.run, kwargs={'debug': False})
+    flask_thread.start()
+    
+    # Run the Discord bot in the main thread
+    run_discord_bot()
